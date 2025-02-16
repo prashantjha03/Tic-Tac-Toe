@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="tictactoe.png">
+    <title>Tic Tac Toe | Prashant Jha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center h-screen">
+    <div id="name-popup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-lg text-center">
+           
+            <h2 class="text-2xl font-bold mb-4">Enter Player Names</h2>
+            <input id="player1" type="text" placeholder="Player 1 Name" class="border p-2 mb-2 w-full">
+            <input id="player2" type="text" placeholder="Player 2 Name" class="border p-2 mb-2 w-full">
+            <button onclick="startGame()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">Start Game</button>
+            <button onclick="useDefaultNames()" class="bg-gray-500 text-white px-4 py-2 rounded-lg mt-2">Use Default</button>
+            <br>
+            <br>
+            <h1 class="text-l text-semibold text-decoration-line: underline">Created by Prashant Jha </h1>
+        </div>
+    </div>
+    
+    <h1 class="text-white text-4xl mb-4 font-bold">Tic Tac Toe</h1>
+    <p id="turn" class="text-white text-xl mb-2"></p>
+    <div class="grid grid-cols-3 gap-2 w-64 mx-auto">
+        <button class="cell w-20 h-20 bg-white text-2xl font-bold border rounded-lg" onclick="makeMove(this, 0)"></button>
+        <button class="cell w-20 h-20 bg-white text-2xl font-bold border rounded-lg" onclick="makeMove(this, 1)"></button>
+        <button class="cell w-20 h-20 bg-white text-2xl font-bold border rounded-lg" onclick="makeMove(this, 2)"></button>
+        <button class="cell w-20 h-20 bg-white text-2xl font-bold border rounded-lg" onclick="makeMove(this, 3)"></button>
+        <button class="cell w-20 h-20 bg-white text-2xl font-bold border rounded-lg" onclick="makeMove(this, 4)"></button>
+        <button class="cell w-20 h-20 bg-white text-2xl font-bold border rounded-lg" onclick="makeMove(this, 5)"></button>
+        <button class="cell w-20 h-20 bg-white text-2xl font-bold border rounded-lg" onclick="makeMove(this, 6)"></button>
+        <button class="cell w-20 h-20 bg-white text-2xl font-bold border rounded-lg" onclick="makeMove(this, 7)"></button>
+        <button class="cell w-20 h-20 bg-white text-2xl font-bold border rounded-lg" onclick="makeMove(this, 8)"></button>
+    </div>
+    
+    <button onclick="resetGame()" class="mt-4 bg-red-500 text-white px-4 py-2 rounded-lg">Restart Game</button>
+    
+    <div id="popup" class="hidden fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white p-6 rounded-lg text-center">
+            <p id="popup-text" class="text-2xl font-bold mb-4"></p>
+            <button onclick="resetGame()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">New Game</button>
+        </div>
+    </div>
+    
+    <script>
+let board = Array(9).fill(null);
+let currentPlayer = 'X';
+let players = { X: "Player 1", O: "Player 2" };
+const winPatterns = [
+    [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6]
+];
+
+function startGame() {
+    players.X = document.getElementById("player1").value || "X";
+    players.O = document.getElementById("player2").value || "O";
+    document.getElementById("name-popup").classList.add("hidden");
+    document.getElementById("turn").textContent = `${players[currentPlayer]}'s Turn`;
+}
+
+function useDefaultNames() {
+    players.X = "X";
+    players.O = "O";
+    document.getElementById("name-popup").classList.add("hidden");
+    document.getElementById("turn").textContent = `${players[currentPlayer]}'s Turn`;
+}
+
+function makeMove(cell, index) {
+    if (!board[index]) {
+        board[index] = currentPlayer;
+        cell.textContent = currentPlayer;
+        if (checkWinner()) {
+            showPopup(`${players[currentPlayer]} Wins!`);
+            return;
+        }
+        if (!board.includes(null)) {
+            showPopup('It\'s a Draw!');
+            return;
+        }
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+        document.getElementById("turn").textContent = `${players[currentPlayer]}'s Turn`;
+    }
+}
+
+function checkWinner() {
+    return winPatterns.some(pattern => 
+        pattern.every(index => board[index] === currentPlayer)
+    );
+}
+
+function resetGame() {
+    board.fill(null);
+    document.querySelectorAll(".cell").forEach(cell => cell.textContent = "");
+    currentPlayer = 'X';
+    document.getElementById("turn").textContent = `${players[currentPlayer]}'s Turn`;
+    document.getElementById("popup").classList.add("hidden");
+}
+
+function showPopup(message) {
+    document.getElementById("popup-text").textContent = message;
+    document.getElementById("popup").classList.remove("hidden");
+}
+
+    </script>
+</body>
+</html>
